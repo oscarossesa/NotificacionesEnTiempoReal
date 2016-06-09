@@ -125,16 +125,6 @@
     <Content Include="dll\Dapper.dll" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="MyPushConnection.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MyPushConnection.edmx</DependentUpon>
-      <LastGenOutput>MyPushConnection.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="MyPushConnection.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>MyPushConnection.edmx</DependentUpon>
-      <LastGenOutput>MyPushConnection.cs</LastGenOutput>
-    </Content>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -160,29 +150,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Contacts.cs">
-      <DependentUpon>MyPushConnection.tt</DependentUpon>
-    </Compile>
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DBHelper.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="MyPushConnection.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MyPushConnection.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="MyPushConnection.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MyPushConnection.tt</DependentUpon>
-    </Compile>
-    <Compile Include="MyPushConnection.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>MyPushConnection.edmx</DependentUpon>
-    </Compile>
+    <Compile Include="Models\Indicador.cs" />
+    <Compile Include="Models\Usuario.cs" />
     <Compile Include="NotificationComponent.cs" />
     <Compile Include="NotificationHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -191,13 +165,6 @@
   <ItemGroup>
     <Content Include="Views\web.config" />
     <Content Include="packages.config" />
-    <EntityDeploy Include="MyPushConnection.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>MyPushConnection.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="MyPushConnection.edmx.diagram">
-      <DependentUpon>MyPushConnection.edmx</DependentUpon>
-    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -207,7 +174,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

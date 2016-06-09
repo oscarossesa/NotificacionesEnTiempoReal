@@ -3,8 +3,10 @@
     var defaults = {
         Controladores:
         {
-            GetPrecioCaro: 'PrecioCaro/Index',
-            GetCantidadReportes: 'PrecioCaro/CantidadReportes'
+            A: '/Home/GetNotificationContacts',
+            B: '@Url.Action("GetNotificationContacts", "Home")',
+            C: 'Notificador/Home/GetNotificationContacts',
+            D: 'Home/GetNotificationContacts'
         },
         Tipo: 0
     };
@@ -12,49 +14,6 @@
     var config = $.extend(defaults, options);
 
     jQuery.Notificador.Init = function Init() {
-
-        verContactos();
-        actualizarContador();
-
-        // ver contactos
-        function verContactos() {
-            $.ajax({
-                type: 'GET',
-                //url: '/Home/GetNotificationContacts',
-                //url: '@Url.Action("GetNotificationContacts", "Home")',
-                //url: 'Home/GetNotificationContacts',
-                url: 'Notificador/Home/GetNotificationContacts',
-                success: function (response) {
-                    $('#contentContacts').empty();
-                    $.each(response, function (index, value) {
-                        $('#contentContacts').append($('<li>' + value.ContactName + '</li>'));
-                    });
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
-        }
-
-        // update notification count
-        function actualizarContador() {
-            var count = 0;
-
-            $.ajax({
-                type: 'GET',
-                //url: '/Home/GetNotificationContacts',
-                //url: '@Url.Action("GetNotificationContacts", "Home")',
-                //url: 'Home/GetNotificationContacts',
-                url: 'Notificador/Home/GetNotificationContacts',
-                success: function (response) {
-                    count = parseInt(response.length);
-                    $('span.count').html(count);
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
-        }
 
         // signalr js code for start hub and send receive notification
         var notificationHub = $.connection.notificationHub;
@@ -64,12 +23,101 @@
         //signalr method for push server message to client
         notificationHub.client.notify = function (message) {
             if (message && message.toLowerCase() == "nuevocontacto") {
-                verContactos();
-                actualizarContador();
+                jQuery.Notificador.ActualizarContadorNotificacion();
+                jQuery.Notificador.ListarContactos();
             }
-        }
+        }        
+
+        jQuery.Notificador.EsconderNotificacion();
 
     };
+
+    jQuery.Notificador.ActualizarContadorNotificacion = function ActualizarContadorNotificacion() {
+
+        var count = 0;
+        count = parseInt(jQuery.Notificador.CantidadUsuarios());
+        $('span.count').html(count);
+
+    };
+
+    jQuery.Notificador.CantidadUsuarios = function CantidadUsuarios() {
+
+        $.ajax({
+            type: 'GET',
+            url: config.Controladores.D,
+            async: false,
+            success: function (response) {
+                count = parseInt(response.length);                
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+        return count;
+    };
+    
+    jQuery.Notificador.ListarContactos = function ListarContactos() {
+
+        $.ajax({
+            type: 'GET',
+            url: config.Controladores.D,
+            success: function (response) {
+                $('#contentContacts').empty();
+                $.each(response, function (index, value) {
+                    $('#contentContacts').append($('<li>' + value.ContactName + '</li>'));
+                });
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+    };    
+
+    jQuery.Notificador.VerContenidoNotificacion = function VerContenidoNotificacion() {
+
+        $('#notiContent').empty();
+        $('#notiContent').append($('<li>Loading...</li>'));
+        $.ajax({
+            type: 'GET',
+            url: config.Controladores.D,
+            success: function (response) {
+                $('#notiContent').empty();
+                if (response.length == 0) {
+                    $('#notiContent').append($('<li>No data available</li>'));
+                }
+                $.each(response, function (index, value) {
+                    $('#notiContent').append($('<li>New contact : ' + value.ContactName + ' (' + value.ContactNo + ') added</li>'));
+                });
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+    };   
+
+    jQuery.Notificador.EsconderNotificacion = function EsconderNotificacion() {
+    
+        $('html').click(function () {
+            $('.noti-content').hide();
+        })
+    
+    };
+    
+/*
+
+    jQuery.Notificador.VerContactos = function VerContactos() {
+
+    
+
+    };
+
+*/
+
+
+
 
     //jQuery.Notificador.Init = function Init() {
 

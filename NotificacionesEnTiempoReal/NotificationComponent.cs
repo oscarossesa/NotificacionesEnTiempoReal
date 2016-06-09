@@ -88,23 +88,15 @@ namespace NotificacionesEnTiempoReal
             RegisterNotification(DateTime.Now);
         }
 
-        //public List<Contacts> GetContacts(DateTime afterDate)
-        //{
-        //    using (DemoNotificacionesEnTiempoRealEntities dc = new DemoNotificacionesEnTiempoRealEntities())
-        //    {
-        //        return dc.Contacts.Where(a => a.AddedOn > afterDate).OrderByDescending(a => a.AddedOn).ToList();
-        //    }
-        //}
-
-        public List<Contacts> ObtenerContactos(DateTime afterDate)
+        public List<Models.Usuario> ObtenerContactos(DateTime afterDate)
         {
-            var lista = new List<Contacts>();
+            var lista = new List<Models.Usuario>();
 
             using (var connection = DBHelper.Connect(DBHelper.ConexionEnum.DemoSignalr))
             {
                 connection.Open();
 
-                lista = connection.Query<Contacts>("ObtenerContactos", commandType: CommandType.StoredProcedure).ToList();
+                lista = connection.Query<Models.Usuario>("ObtenerContactos", commandType: CommandType.StoredProcedure).ToList();
             }
 
             return lista;
