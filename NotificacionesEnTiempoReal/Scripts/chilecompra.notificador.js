@@ -15,20 +15,6 @@
 
     $.Notificador.Init = function Init() {
 
-        // signalr js code for start hub and send receive notification
-        var notificationHub = $.connection.notificationHub;
-
-        $.connection.hub.start().done();
-
-        //signalr method for push server message to client
-        notificationHub.client.notify = function (message) {
-            if (message && message.toLowerCase() == "nuevocontacto") {
-                $.Notificador.ActualizarContadorNotificacion();
-                $.Notificador.ListarContactos();
-                $.Notificador.LicitacionPublicada();
-            }
-        }
-
         $.Notificador.EsconderNotificacion();
 
     };
@@ -36,28 +22,32 @@
     $.Notificador.ActualizarContadorNotificacion = function ActualizarContadorNotificacion() {
 
         var count = 0;
-        count = parseInt(jQuery.Notificador.CantidadUsuarios());
-        $('span.count').html(count);
+        var licitaciones = $.Notificador.CantidadUsuarios();
+
+        $('span.count').html(parseInt(licitaciones.length));
 
     };
 
     $.Notificador.CantidadUsuarios = function CantidadUsuarios() {
 
-        var count = 0;
+        //var count = 0;
+
+        var licitaciones;
 
         $.ajax({
             type: 'GET',
             url: config.Controladores.GetNotificationContacts,
             async: false,
             success: function (response) {
-                count = parseInt(response.length);
+                licitaciones = response;
+                //count = parseInt(response.length);
             },
             error: function (error) {
                 console.log(error);
             }
         });
 
-        return count;
+        return licitaciones;
     };
 
     $.Notificador.ListarContactos = function ListarContactos() {
@@ -111,7 +101,10 @@
 
     $.Notificador.LicitacionPublicada = function LicitacionPublicada() {
 
-        $.notify("Se ha publicado una nueva licitación: Data Center y Servicios Asociados.", "success");
+        $.notify('Se ha publicado una nueva licitación: Data Center y Servicios Asociados.', {
+            position: 'right bottom',
+            className: 'success'
+        });
 
     };
 

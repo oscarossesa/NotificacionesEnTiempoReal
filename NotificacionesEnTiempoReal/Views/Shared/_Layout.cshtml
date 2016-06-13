@@ -52,11 +52,25 @@
     <script type="text/javascript">
 		$(document).ready(function () {
 		    $.Notificador();
-		    $.Notificador.Init();
-		    $.Notificador.ListarContactos();
-		    $.Notificador.ActualizarContadorNotificacion();
+		    //$.Notificador.Init();
+		    //$.Notificador.ListarContactos();
+		    //$.Notificador.ActualizarContadorNotificacion();		    
 
-		    
+		    // signalr js code for start hub and send receive notification
+		    var notificationHub = $.connection.notificationHub;
+
+		    $.connection.hub.start()
+                .done(function () { console.log('Now connected, connection ID=' + $.connection.hub.id); })
+                .fail(function () { console.log('Could not Connect!'); });
+
+		    //signalr method for push server message to client
+		    notificationHub.client.notify = function (message) {
+		        if (message && message.toLowerCase() == "nuevocontacto") {
+		            $.Notificador.ActualizarContadorNotificacion();
+		            $.Notificador.ListarContactos();
+		            $.Notificador.LicitacionPublicada();
+		        }
+		    }
 
 		    // Click on notification icon for show notification
 		    $('span.noti').click(function (e) {
